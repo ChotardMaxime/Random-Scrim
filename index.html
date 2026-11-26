@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scrim random – Sea of Thieves</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Scrim random</h1>
+  <p class="lead">Répartis tes joueurs au hasard entre les bateaux de Sea of Thieves.</p>
+
+  <section aria-labelledby="h-config">
+    <h2 id="h-config">Configuration</h2>
+
+    <fieldset>
+      <legend>Bateau</legend>
+      <div class="ships">
+        <label class="ship">
+          <input type="radio" name="ship" value="sloop">
+          <span>Sloop<small>2 joueurs</small></span>
+        </label>
+        <label class="ship">
+          <input type="radio" name="ship" value="brig">
+          <span>Brig<small>3 joueurs</small></span>
+        </label>
+        <label class="ship">
+          <input type="radio" name="ship" value="galion" checked>
+          <span>Galion<small>4 joueurs</small></span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div>
+      <label class="label" for="count">Nombre de joueurs</label>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="Retirer un joueur">−</button>
+        <input type="number" id="count" min="2" max="40" value="8" inputmode="numeric">
+        <button type="button" id="plus" aria-label="Ajouter un joueur">+</button>
+      </div>
+    </div>
+
+    <p class="summary" id="summary" aria-live="polite"></p>
+  </section>
+
+  <section aria-labelledby="h-players">
+    <h2 id="h-players">Joueurs</h2>
+    <div class="fields" id="fields"></div>
+    <p class="error" id="error" role="alert"></p>
+    <div class="actions">
+      <button type="button" class="primary" id="shuffle">Mélanger les équipes</button>
+      <button type="button" id="clear">Vider les noms</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-results" id="results" hidden>
+    <h2 id="h-results">Équipes</h2>
+    <p class="note" id="note" hidden></p>
+    <div class="teams" id="teams"></div>
+    <div class="actions">
+      <button type="button" class="primary" id="reshuffle">Mélanger à nouveau</button>
+      <button type="button" id="copy">Copier le résultat</button>
+    </div>
+    <p class="status" id="status" aria-live="polite"></p>
+  </section>
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>

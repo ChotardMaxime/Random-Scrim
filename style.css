@@ -1,0 +1,235 @@
+/* ==========================================================
+   DA du site : tout se règle ici, dans les variables.
+   Change ces valeurs et tout le site suit.
+   ========================================================== */
+
+:root {
+  /* --- Couleurs (thème clair) --- */
+  --color-bg:         #e9edec;  /* fond de la page */
+  --color-surface:    #f7f9f8;  /* fond des blocs */
+  --color-text:       #18262d;  /* texte principal */
+  --color-muted:      #5b6b72;  /* texte secondaire */
+  --color-border:     #c9d2d3;  /* bordures */
+  --color-accent:     #1d4f5c;  /* couleur principale (boutons, sélection, équipes) */
+  --color-accent-text:#ffffff;  /* texte posé sur la couleur principale */
+  --color-danger:     #9b2c2c;  /* messages d'erreur */
+
+  /* --- Typographie --- */
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: Georgia, "Times New Roman", serif;
+
+  /* --- Formes --- */
+  --radius:       6px;   /* boutons, champs, cartes d'équipe */
+  --radius-block: 8px;   /* gros blocs */
+  --team-stripe:  4px;   /* épaisseur du liseré des équipes */
+
+  color-scheme: light;
+}
+
+/* --- Couleurs (thème sombre, appliqué si l'appareil est en mode sombre) --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:         #121c20;
+    --color-surface:    #1a272c;
+    --color-text:       #e3ebec;
+    --color-muted:      #93a4aa;
+    --color-border:     #2c3d43;
+    --color-accent:     #6fb0bf;
+    --color-accent-text:#0e1a1e;
+    --color-danger:     #e08a8a;
+
+    color-scheme: dark;
+  }
+}
+
+/* ==========================================================
+   Base
+   ========================================================== */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  padding: 2rem 1rem 3rem;
+}
+
+.wrap { max-width: 640px; margin: 0 auto; }
+
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 .25rem;
+}
+.lead { color: var(--color-muted); margin: 0 0 2rem; }
+
+section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-block);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+h2 { font-size: 1.05rem; margin: 0 0 .9rem; }
+
+fieldset { border: 0; padding: 0; margin: 0 0 1.25rem; }
+legend, .label {
+  font-weight: 600;
+  font-size: .95rem;
+  padding: 0;
+  margin-bottom: .5rem;
+  display: block;
+}
+
+/* ==========================================================
+   Choix du bateau
+   ========================================================== */
+
+.ships { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+
+.ship input { position: absolute; opacity: 0; pointer-events: none; }
+.ship span {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: .6rem .5rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--color-bg);
+}
+.ship small { display: block; color: var(--color-muted); font-size: .8rem; }
+
+.ship input:checked + span {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+  background: var(--color-surface);
+}
+.ship input:focus-visible + span {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   Nombre de joueurs
+   ========================================================== */
+
+.stepper { display: inline-flex; align-items: stretch; }
+.stepper button { width: 2.5rem; font-size: 1.2rem; }
+.stepper input {
+  width: 4rem;
+  text-align: center;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}
+.stepper button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.stepper button:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* ==========================================================
+   Champs et boutons
+   ========================================================== */
+
+input[type="number"], input[type="text"], button {
+  font: inherit;
+  color: inherit;
+}
+input[type="number"], input[type="text"] {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: .5rem .65rem;
+  width: 100%;
+}
+input[type="number"] { -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+input:focus-visible, button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+button {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: .5rem .9rem;
+  cursor: pointer;
+}
+button:hover { border-color: var(--color-accent); }
+
+button.primary {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+  font-weight: 600;
+}
+button.primary:hover { filter: brightness(1.08); }
+
+/* ==========================================================
+   Résumé, joueurs, erreurs
+   ========================================================== */
+
+.summary { color: var(--color-muted); margin: 1rem 0 0; font-size: .95rem; }
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.error {
+  color: var(--color-danger);
+  min-height: 1.4em;
+  margin: 0 0 .75rem;
+  font-size: .95rem;
+}
+.actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* ==========================================================
+   Résultats
+   ========================================================== */
+
+.teams {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.team {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-left: var(--team-stripe) solid var(--color-accent);
+  border-radius: var(--radius);
+  padding: .75rem .9rem;
+}
+.team h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.team h3 small { color: var(--color-muted); font-weight: 400; margin-left: .35rem; }
+.team ul { margin: 0; padding-left: 1.1rem; }
+
+.team.reveal { animation: reveal .25s ease-out both; }
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.note   { color: var(--color-muted); font-size: .9rem; margin: 0 0 1rem; }
+.status { color: var(--color-muted); font-size: .9rem; margin: .75rem 0 0; min-height: 1.4em; }
+
+[hidden] { display: none !important; }
+
+/* ==========================================================
+   Mobile et accessibilité
+   ========================================================== */
+
+@media (max-width: 480px) {
+  .fields { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team.reveal { animation: none; }
+}
