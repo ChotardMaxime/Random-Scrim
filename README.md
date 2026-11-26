@@ -16,7 +16,7 @@ Pick a ship, enter the players and their roles, and the site randomly builds two
 - Warning when some players could not get one of their roles
 - Input validation: empty and duplicate names are rejected
 - Names and roles are remembered in your browser between visits
-- Dark theme in the colors of the guild logo (charcoal, pink and white), with Barlow Condensed and Inter fonts
+- Light and dark theme, following your device settings
 - Footer with project info, a link to the source code and a fan-project disclaimer
 - Works on desktop and mobile
 
@@ -55,7 +55,7 @@ Each player in the result shows a small tag when they did not get their main rol
 
 ## Customizing the look
 
-All colors, fonts, radii and the page width are CSS variables at the top of `style.css`. Edit the `:root` block to change the whole design. The two fonts are loaded from Google Fonts in `index.html`: to change them, edit the `<link>` tag there and the `--font-body` and `--font-heading` variables.
+All colors, fonts, radii and the page width are CSS variables at the top of `style.css`. Edit the `:root` block to change the whole design. The dark theme has its own set of values in the `prefers-color-scheme: dark` block. The two fonts are loaded from Google Fonts in `index.html`: to change them, edit the `<link>` tag there and the `--font-body` and `--font-heading` variables.
 
 ## Hosting
 

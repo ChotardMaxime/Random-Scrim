@@ -5,18 +5,18 @@
    ========================================================== */
 
 :root {
-  /* --- Couleurs --- */
-  --color-bg:          #141416;  /* fond de la page (anthracite) */
-  --color-surface:     #1c1c20;  /* fond des blocs */
-  --color-text:        #f5f5f7;  /* texte principal (blanc) */
-  --color-muted:       #a0a0aa;  /* texte secondaire */
-  --color-border:      #2f2f35;  /* bordures */
-  --color-accent:      #f4468c;  /* rose : boutons, sélection, liens, équipe 1 */
-  --color-accent-soft: rgba(244, 70, 140, .12); /* fond du bateau sélectionné */
-  --color-accent-text: #141416;  /* texte posé sur le rose */
-  --color-warning:     #f5b94a;  /* erreurs et joueurs hors de leurs rôles */
+  /* --- Couleurs (thème clair) --- */
+  --color-bg:          #e9edec;  /* fond de la page */
+  --color-surface:     #f7f9f8;  /* fond des blocs */
+  --color-text:        #18262d;  /* texte principal */
+  --color-muted:       #5b6b72;  /* texte secondaire (rôles, sous-rôle) */
+  --color-border:      #c9d2d3;  /* bordures */
+  --color-accent:      #1d4f5c;  /* couleur principale (boutons, sélection, équipes) */
+  --color-accent-soft: rgba(29, 79, 92, .12); /* fond du bateau sélectionné */
+  --color-accent-text: #ffffff;  /* texte posé sur la couleur principale */
+  --color-danger:      #9b2c2c;  /* erreurs et joueurs hors de leurs rôles */
   --color-team-a:      var(--color-accent); /* liseré de l'équipe 1 */
-  --color-team-b:      #f5f5f7;             /* liseré de l'équipe 2 */
+  --color-team-b:      var(--color-text);   /* liseré de l'équipe 2 */
 
   /* --- Typographie --- */
   --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -126,7 +126,6 @@ input[type="text"], select {
   width: 100%;
 }
 input[type="text"]::placeholder { color: var(--color-muted); opacity: .7; }
-
 input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -210,7 +209,7 @@ button.primary:hover { filter: brightness(1.1); }
 .team .who  { font-weight: 600; }
 .tag { margin-left: auto; font-size: .75rem; }
 .tag-sub { color: var(--color-muted); }
-.tag-off { color: var(--color-warning); }
+.tag-off { color: var(--color-danger); }
 
 .team.reveal { animation: reveal .25s ease-out both; }
 @keyframes reveal {
