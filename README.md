@@ -1,10 +1,5 @@
 # Scrim Random
 
-<<<<<<< Updated upstream
-Il permet de shuffle jusqu'a 8 joueurs pour les 3 bateaux. 
-
-On peut copier coller l'organisation, tout vider les noms. Si le nombre est insuffisant, obtiens un shuffle avec le nombre donné avec un message de warning. 
-=======
 A simple website to organize scrims (warm-up matches) in **Sea of Thieves**.
 
 Pick a ship, enter the player names, and the site randomly splits everyone into balanced crews.
