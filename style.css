@@ -1,45 +1,34 @@
 /* ==========================================================
    DA du site : tout se règle ici, dans les variables.
    Change ces valeurs et tout le site suit.
+   Couleurs tirées du logo de la guilde : anthracite, rose, blanc.
    ========================================================== */
 
 :root {
-  /* --- Couleurs (thème clair) --- */
-  --color-bg:         #e9edec;  /* fond de la page */
-  --color-surface:    #f7f9f8;  /* fond des blocs */
-  --color-text:       #18262d;  /* texte principal */
-  --color-muted:      #5b6b72;  /* texte secondaire */
-  --color-border:     #c9d2d3;  /* bordures */
-  --color-accent:     #1d4f5c;  /* couleur principale (boutons, sélection, équipes) */
-  --color-accent-text:#ffffff;  /* texte posé sur la couleur principale */
-  --color-danger:     #9b2c2c;  /* messages d'erreur */
+  /* --- Couleurs --- */
+  --color-bg:          #141416;  /* fond de la page (anthracite) */
+  --color-surface:     #1c1c20;  /* fond des blocs */
+  --color-text:        #f5f5f7;  /* texte principal (blanc) */
+  --color-muted:       #a0a0aa;  /* texte secondaire */
+  --color-border:      #2f2f35;  /* bordures */
+  --color-accent:      #f4468c;  /* rose : boutons, sélection, liens, équipe 1 */
+  --color-accent-soft: rgba(244, 70, 140, .12); /* fond du bateau sélectionné */
+  --color-accent-text: #141416;  /* texte posé sur le rose */
+  --color-warning:     #f5b94a;  /* erreurs et joueurs hors de leurs rôles */
+  --color-team-a:      var(--color-accent); /* liseré de l'équipe 1 */
+  --color-team-b:      #f5f5f7;             /* liseré de l'équipe 2 */
 
   /* --- Typographie --- */
-  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-heading: Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
 
   /* --- Formes --- */
   --radius:       6px;   /* boutons, champs, cartes d'équipe */
-  --radius-block: 8px;   /* gros blocs */
+  --radius-block: 10px;  /* gros blocs */
   --team-stripe:  4px;   /* épaisseur du liseré des équipes */
+  --max-width:    720px; /* largeur maximale de la page */
 
-  color-scheme: light;
-}
-
-/* --- Couleurs (thème sombre, appliqué si l'appareil est en mode sombre) --- */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg:         #121c20;
-    --color-surface:    #1a272c;
-    --color-text:       #e3ebec;
-    --color-muted:      #93a4aa;
-    --color-border:     #2c3d43;
-    --color-accent:     #6fb0bf;
-    --color-accent-text:#0e1a1e;
-    --color-danger:     #e08a8a;
-
-    color-scheme: dark;
-  }
+  color-scheme: dark;
 }
 
 /* ==========================================================
@@ -54,17 +43,20 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.5;
-  padding: 2rem 1rem 3rem;
+  padding: 2.5rem 1rem 2rem;
 }
 
-.wrap { max-width: 640px; margin: 0 auto; }
+.wrap { max-width: var(--max-width); margin: 0 auto; }
 
-h1 {
+h1, h2, h3 {
   font-family: var(--font-heading);
-  font-size: 2rem;
+  letter-spacing: .01em;
+}
+h1 {
+  font-size: 3rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0 0 .25rem;
+  line-height: 1.05;
+  margin: 0 0 .4rem;
 }
 .lead { color: var(--color-muted); margin: 0 0 2rem; }
 
@@ -75,16 +67,18 @@ section {
   padding: 1.25rem;
   margin-bottom: 1rem;
 }
-h2 { font-size: 1.05rem; margin: 0 0 .9rem; }
+h2 { font-size: 1.4rem; font-weight: 600; line-height: 1.2; margin: 0 0 .9rem; }
 
 fieldset { border: 0; padding: 0; margin: 0 0 1.25rem; }
-legend, .label {
+legend {
   font-weight: 600;
   font-size: .95rem;
   padding: 0;
   margin-bottom: .5rem;
   display: block;
 }
+
+.hint { color: var(--color-muted); font-size: .9rem; margin: -.3rem 0 1rem; }
 
 /* ==========================================================
    Choix du bateau
@@ -99,15 +93,17 @@ legend, .label {
   border-radius: var(--radius);
   padding: .6rem .5rem;
   text-align: center;
+  font-weight: 600;
   cursor: pointer;
   background: var(--color-bg);
 }
-.ship small { display: block; color: var(--color-muted); font-size: .8rem; }
+.ship span:hover { border-color: var(--color-muted); }
+.ship small { display: block; color: var(--color-muted); font-size: .8rem; font-weight: 400; }
 
 .ship input:checked + span {
   border-color: var(--color-accent);
   box-shadow: inset 0 0 0 1px var(--color-accent);
-  background: var(--color-surface);
+  background: var(--color-accent-soft);
 }
 .ship input:focus-visible + span {
   outline: 2px solid var(--color-accent);
@@ -115,41 +111,23 @@ legend, .label {
 }
 
 /* ==========================================================
-   Nombre de joueurs
-   ========================================================== */
-
-.stepper { display: inline-flex; align-items: stretch; }
-.stepper button { width: 2.5rem; font-size: 1.2rem; }
-.stepper input {
-  width: 4rem;
-  text-align: center;
-  border-radius: 0;
-  border-left: 0;
-  border-right: 0;
-}
-.stepper button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
-.stepper button:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
-
-/* ==========================================================
    Champs et boutons
    ========================================================== */
 
-input[type="number"], input[type="text"], button {
+input[type="text"], select, button {
   font: inherit;
   color: inherit;
 }
-input[type="number"], input[type="text"] {
+input[type="text"], select {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: .5rem .65rem;
   width: 100%;
 }
-input[type="number"] { -moz-appearance: textfield; }
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="text"]::placeholder { color: var(--color-muted); opacity: .7; }
 
-input:focus-visible, button:focus-visible {
+input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
@@ -169,7 +147,7 @@ button.primary {
   border-color: var(--color-accent);
   font-weight: 600;
 }
-button.primary:hover { filter: brightness(1.08); }
+button.primary:hover { filter: brightness(1.1); }
 
 /* ==========================================================
    Résumé, joueurs, erreurs
@@ -177,14 +155,16 @@ button.primary:hover { filter: brightness(1.08); }
 
 .summary { color: var(--color-muted); margin: 1rem 0 0; font-size: .95rem; }
 
-.fields {
+.fields { display: grid; gap: .5rem; margin-bottom: 1rem; }
+
+.player {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 9.5rem 9.5rem;
   gap: .5rem;
-  margin-bottom: 1rem;
 }
+
 .error {
-  color: var(--color-danger);
+  color: var(--color-warning);
   min-height: 1.4em;
   margin: 0 0 .75rem;
   font-size: .95rem;
@@ -204,13 +184,33 @@ button.primary:hover { filter: brightness(1.08); }
 .team {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
-  border-left: var(--team-stripe) solid var(--color-accent);
+  border-left: var(--team-stripe) solid var(--color-team-a);
   border-radius: var(--radius);
   padding: .75rem .9rem;
 }
-.team h3 { margin: 0 0 .4rem; font-size: 1rem; }
-.team h3 small { color: var(--color-muted); font-weight: 400; margin-left: .35rem; }
-.team ul { margin: 0; padding-left: 1.1rem; }
+.team:nth-child(2) { border-left-color: var(--color-team-b); }
+
+.team h3 { margin: 0 0 .5rem; font-size: 1.3rem; font-weight: 600; line-height: 1.2; }
+.team h3 small {
+  font-family: var(--font-body);
+  font-size: .85rem;
+  color: var(--color-muted);
+  font-weight: 400;
+  margin-left: .35rem;
+}
+
+.team ul { list-style: none; margin: 0; padding: 0; }
+.team li {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  padding: .15rem 0;
+}
+.team .role { width: 3.2rem; flex: none; font-size: .85rem; color: var(--color-muted); }
+.team .who  { font-weight: 600; }
+.tag { margin-left: auto; font-size: .75rem; }
+.tag-sub { color: var(--color-muted); }
+.tag-off { color: var(--color-warning); }
 
 .team.reveal { animation: reveal .25s ease-out both; }
 @keyframes reveal {
@@ -218,17 +218,51 @@ button.primary:hover { filter: brightness(1.08); }
   to   { opacity: 1; transform: none; }
 }
 
-.note   { color: var(--color-muted); font-size: .9rem; margin: 0 0 1rem; }
+.note   { color: var(--color-muted); font-size: .9rem; margin: 0 0 1rem; white-space: pre-line; }
 .status { color: var(--color-muted); font-size: .9rem; margin: .75rem 0 0; min-height: 1.4em; }
 
 [hidden] { display: none !important; }
 
 /* ==========================================================
+   Pied de page
+   ========================================================== */
+
+.footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: .9rem;
+}
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.footer p { margin: 0; }
+.footer-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: .25rem;
+}
+.footer-info { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.footer a { color: var(--color-accent); text-underline-offset: 3px; }
+.footer a:hover { text-decoration-thickness: 2px; }
+.footer a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
+.footer-legal { font-size: .8rem; max-width: 60ch; }
+
+/* ==========================================================
    Mobile et accessibilité
    ========================================================== */
 
-@media (max-width: 480px) {
-  .fields { grid-template-columns: 1fr; }
+@media (max-width: 520px) {
+  h1 { font-size: 2.5rem; }
+  .player { grid-template-columns: 1fr 1fr; }
+  .player .p-name { grid-column: 1 / -1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .team.reveal { animation: none; }
