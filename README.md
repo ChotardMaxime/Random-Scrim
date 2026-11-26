@@ -64,3 +64,4 @@ The site is fully static (HTML, CSS and JavaScript only), so it can be hosted fo
 2. Go to **Settings > Pages**.
 3. Select **Deploy from a branch**, then the `main` branch and the `/ (root)` folder.
 4. The site is available at `https://<username>.github.io/<repository>/`.
+
