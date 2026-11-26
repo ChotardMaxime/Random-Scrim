@@ -3,26 +3,28 @@
 
   /* ==========================================================
      Configuration des bateaux
-     - roles     : un de chaque = l'équipage idéal
-     - dropOrder : rôles retirés en premier quand une équipe est
-                   incomplète (ex. 7 joueurs en galion = 4 + 3)
+     Un scrim est toujours un 1v1 : 2 équipes complètes.
+     - roles : un de chaque = l'équipage idéal
+     Nombre de joueurs = TEAMS x nombre de rôles
+     (sloop 4, brig 6, galion 8)
      ========================================================== */
+  var TEAMS = 2;
+
   var ROLE_LABELS = { helm: "Helm", bilge: "Bilge", flex: "Flex", mc: "MC" };
 
   var SHIPS = {
-    sloop:  { label: "Sloop",  roles: ["helm", "mc"],                  dropOrder: ["mc", "helm"] },
-    brig:   { label: "Brig",   roles: ["helm", "flex", "mc"],          dropOrder: ["mc", "flex", "helm"] },
-    galion: { label: "Galion", roles: ["helm", "bilge", "flex", "mc"], dropOrder: ["mc", "flex", "helm", "bilge"] }
+    sloop:  { label: "Sloop",  roles: ["helm", "mc"] },
+    brig:   { label: "Brig",   roles: ["helm", "flex", "mc"] },
+    galion: { label: "Galion", roles: ["helm", "bilge", "flex", "mc"] }
   };
 
   /* Points donnés à l'affectation : le rôle principal prime sur le sous-rôle */
   var SCORE_MAIN = 1000, SCORE_SUB = 500;
 
-  var MIN_PLAYERS = 2, MAX_PLAYERS = 40;
   var STORAGE_KEY = "scrim-random-v2";
 
   var $ = function (id) { return document.getElementById(id); };
-  var fieldsEl = $("fields"), countEl = $("count"), summaryEl = $("summary");
+  var fieldsEl = $("fields"), summaryEl = $("summary");
   var errorEl = $("error"), resultsEl = $("results"), teamsEl = $("teams");
   var noteEl = $("note"), statusEl = $("status");
 
@@ -34,15 +36,10 @@
   /* ==========================================================
      Utilitaires
      ========================================================== */
-  function clamp(n) {
-    n = parseInt(n, 10);
-    if (isNaN(n)) n = 8;
-    return Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, n));
-  }
-  function getCount() { return clamp(countEl.value); }
   function currentShip() {
     return document.querySelector('input[name="ship"]:checked').value;
   }
+  function playerCount(ship) { return ship.roles.length * TEAMS; }
   function plural(n, one, many) { return n + " " + (n > 1 ? many : one); }
 
   function rand() {
@@ -96,7 +93,7 @@
     syncState();
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        ship: activeShip, count: getCount(), names: names, roles: roles
+        ship: activeShip, names: names, roles: roles
       }));
     } catch (e) { /* ignoré */ }
   }
@@ -109,7 +106,6 @@
       if (data.ship && SHIPS[data.ship]) {
         document.querySelector('input[name="ship"][value="' + data.ship + '"]').checked = true;
       }
-      if (typeof data.count === "number") countEl.value = clamp(data.count);
       if (Array.isArray(data.names)) names = data.names.map(String);
       if (data.roles && typeof data.roles === "object") roles = data.roles;
     } catch (e) { /* ignoré */ }
@@ -119,32 +115,11 @@
      Équipes et rôles
      ========================================================== */
 
-  /* Taille de chaque équipe : équilibrée, jamais plus que l'équipage du bateau */
-  function plan(count, crew) {
-    var teams = Math.ceil(count / crew);
-    var base = Math.floor(count / teams);
-    var extra = count % teams;
-    var sizes = [];
-    for (var i = 0; i < teams; i++) sizes.push(base + (i < extra ? 1 : 0));
-    return sizes;
-  }
-
-  /* Rôles d'une équipe de `size` joueurs : on retire les rôles de dropOrder si elle est incomplète */
-  function rolesFor(ship, size) {
-    var list = ship.roles.slice();
-    var missing = list.length - size;
-    ship.dropOrder.forEach(function (role) {
-      var idx = list.indexOf(role);
-      if (missing > 0 && idx !== -1) { list.splice(idx, 1); missing--; }
-    });
-    while (missing > 0) { list.pop(); missing--; }
-    return list;
-  }
-
-  function teamPlan(count, ship) {
-    return plan(count, ship.roles.length).map(function (size) {
-      return rolesFor(ship, size);
-    });
+  /* Rôles de chaque équipe : une copie complète des rôles du bateau */
+  function teamPlan(ship) {
+    var plan = [];
+    for (var i = 0; i < TEAMS; i++) plan.push(ship.roles.slice());
+    return plan;
   }
 
   /* Algorithme hongrois : affectation de coût minimal (matrice carrée) */
@@ -219,19 +194,9 @@
      ========================================================== */
   function renderSummary() {
     var ship = SHIPS[currentShip()];
-    var count = getCount();
-    var sizes = plan(count, ship.roles.length);
     var roleList = ship.roles.map(function (r) { return ROLE_LABELS[r]; }).join(", ");
-    var text = plural(count, "joueur", "joueurs") + " · " + ship.label + " (" + roleList + ") · ";
-    var even = sizes.every(function (s) { return s === sizes[0]; });
-    if (sizes.length === 1) {
-      text += "1 seule équipe : ajoute des joueurs pour faire un scrim.";
-    } else if (even) {
-      text += sizes.length + " équipes de " + sizes[0];
-    } else {
-      text += sizes.length + " équipes (" + sizes.join(", ") + " joueurs)";
-    }
-    summaryEl.textContent = text;
+    summaryEl.textContent = plural(playerCount(ship), "joueur", "joueurs") + " · " +
+      TEAMS + " équipes de " + ship.roles.length + " (" + roleList + ")";
   }
 
   function makeSelect(cls, placeholder, ship, value, label) {
@@ -263,8 +228,8 @@
   }
 
   function renderFields() {
-    var count = getCount();
     var ship = SHIPS[activeShip];
+    var count = playerCount(ship);
     var saved = Array.isArray(roles[activeShip]) ? roles[activeShip] : [];
     fieldsEl.innerHTML = "";
     for (var i = 0; i < count; i++) {
@@ -365,19 +330,12 @@
     }
 
     var ship = SHIPS[activeShip];
-    var teams = assignRoles(rows, teamPlan(rows.length, ship));
+    var teams = assignRoles(rows, teamPlan(ship));
     lastResult = { teams: teams, ship: ship };
     renderTeams(teams, ship);
 
     /* Messages d'information sous le titre */
     var notes = [];
-    var even = teams.every(function (t) { return t.length === teams[0].length; });
-    if (teams.length === 1) {
-      notes.push("Une seule équipe : il faut au moins deux équipages pour un scrim.");
-    } else if (!even) {
-      var dropped = ship.dropOrder.map(function (r) { return ROLE_LABELS[r]; }).join(", ");
-      notes.push("Le nombre de joueurs ne tombe pas juste : les équipes incomplètes perdent des rôles (retirés dans cet ordre : " + dropped + ").");
-    }
     var subs = 0, offs = 0;
     teams.forEach(function (t) {
       t.forEach(function (m) {
@@ -414,26 +372,9 @@
     }
   }
 
-  function setCount(n) {
-    countEl.value = clamp(n);
-    onConfigChange();
-  }
-
-  function onConfigChange() {
-    syncState();
-    countEl.value = getCount();
-    renderFields();
-    renderSummary();
-    errorEl.textContent = "";
-    save();
-  }
-
   /* ==========================================================
      Événements
      ========================================================== */
-  $("minus").addEventListener("click", function () { setCount(getCount() - 1); });
-  $("plus").addEventListener("click", function () { setCount(getCount() + 1); });
-  countEl.addEventListener("change", onConfigChange);
 
   /* Changer de bateau : on garde les choix de l'ancien et on affiche ceux du nouveau */
   document.querySelectorAll('input[name="ship"]').forEach(function (r) {
@@ -481,7 +422,6 @@
      ========================================================== */
   load();
   activeShip = currentShip();
-  countEl.value = getCount();
   renderFields();
   renderSummary();
 })();

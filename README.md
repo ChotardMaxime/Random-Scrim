@@ -1,19 +1,19 @@
 # Scrim Random
 
-A simple website to organize scrims (warm-up matches) in **Sea of Thieves**.
+A simple website to organize 1v1 scrims (warm-up matches) in **Sea of Thieves**.
 
-Pick a ship, enter the players and their roles, and the site randomly splits everyone into balanced crews, each player getting a role on their ship.
+Pick a ship, enter the players and their roles, and the site randomly builds two balanced crews, each player getting a role on their ship.
 
 ## Features
 
-- Choose the ship type: **Sloop** (2 players), **Brig** (3 players) or **Galleon** (4 players)
-- Set the number of players (2 to 40) and enter their names
-- **Role management** (V2): give each player a main role and an optional sub role
-- Random shuffle into teams, with one player per role in each full crew (the ideal setup)
+- Choose the ship type: **Sloop** (2v2, 4 players), **Brig** (3v3, 6 players) or **Galleon** (4v4, 8 players)
+- Always two full teams: the number of players is set by the ship, so the site is meant to be used once everyone is there
+- **Role management**: give each player a main role and an optional sub role
+- Random shuffle into two teams, with one player per role in each crew (the ideal setup)
 - Re-shuffle as many times as you want
 - Copy the result (teams and roles) to the clipboard, ready to paste into Discord or any chat
 - Clear all names and roles in one click
-- Warnings when the player count doesn't split evenly, when there is only one team, or when some players could not get one of their roles
+- Warning when some players could not get one of their roles
 - Input validation: empty and duplicate names are rejected
 - Names and roles are remembered in your browser between visits
 - Light and dark theme, following your device settings
@@ -21,41 +21,28 @@ Pick a ship, enter the players and their roles, and the site randomly splits eve
 
 ## Roles
 
-| Ship | Roles |
-|------|-------|
-| Sloop | Helm, MC |
-| Brig | Helm, Flex, MC |
-| Galleon | Helm, Bilge, Flex, MC |
+| Ship | Players | Roles per team |
+|------|---------|----------------|
+| Sloop | 4 | Helm, MC |
+| Brig | 6 | Helm, Flex, MC |
+| Galleon | 8 | Helm, Bilge, Flex, MC |
 
-Roles are specific to each ship: a Galleon helm is not a Brig helm. Each ship therefore keeps its own role choices for every player. Switching from Galleon to Brig and back does not erase anything.
+Roles are specific to each ship: a Galleon helm is not a Brig helm. Each ship therefore keeps its own role choices for every player. Switching from Galleon to Brig and back does not erase anything. Names are shared between ships.
 
 ### How roles are assigned
 
-1. Every team gets one of each role of the ship.
+1. Each of the two teams gets one of each role of the ship.
 2. Players are matched to roles so that as many as possible get their **main role**, then their **sub role**.
 3. Players with no preference fill whatever role is left.
-4. Players sharing the same role are then randomly spread across the teams, so the teams change at every shuffle.
+4. Players sharing the same role are then randomly spread across the two teams, so the teams change at every shuffle.
 
 Each player in the result shows a small tag when they did not get their main role: `sous-rôle` (sub role) or `hors rôle` (neither main nor sub role).
-
-### Incomplete teams
-
-When the player count doesn't split evenly (for example 7 players on Galleons gives teams of 4 and 3), the smaller teams lose roles in a fixed order, defined in `script.js`:
-
-| Ship | Roles removed first |
-|------|---------------------|
-| Sloop | MC, then Helm |
-| Brig | MC, then Flex, then Helm |
-| Galleon | MC, then Flex, then Helm, then Bilge |
-
-You can change this order in the `dropOrder` field of each ship at the top of `script.js`.
 
 ## Usage
 
 1. Choose the ship.
-2. Set the number of players.
-3. Type the names and pick a main role and, if needed, a sub role (press Enter in a name field to jump to the next one).
-4. Click **Shuffle teams**.
+2. Type all the names and pick a main role and, if needed, a sub role (press Enter in a name field to jump to the next one).
+3. Click **Shuffle teams**.
 
 ## Project structure
 

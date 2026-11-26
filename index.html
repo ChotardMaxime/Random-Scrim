@@ -9,7 +9,7 @@
 <body>
 <div class="wrap">
   <h1>Scrim random</h1>
-  <p class="lead">Répartis tes joueurs et leurs rôles au hasard entre les bateaux de Sea of Thieves.</p>
+  <p class="lead">Répartis tes joueurs et leurs rôles au hasard pour un scrim 1v1 sur Sea of Thieves.</p>
 
   <section aria-labelledby="h-config">
     <h2 id="h-config">Configuration</h2>
@@ -19,27 +19,19 @@
       <div class="ships">
         <label class="ship">
           <input type="radio" name="ship" value="sloop">
-          <span>Sloop<small>2 joueurs</small></span>
+          <span>Sloop<small>4 joueurs</small></span>
         </label>
         <label class="ship">
           <input type="radio" name="ship" value="brig">
-          <span>Brig<small>3 joueurs</small></span>
+          <span>Brig<small>6 joueurs</small></span>
         </label>
         <label class="ship">
           <input type="radio" name="ship" value="galion" checked>
-          <span>Galion<small>4 joueurs</small></span>
+          <span>Galion<small>8 joueurs</small></span>
         </label>
       </div>
     </fieldset>
 
-    <div>
-      <label class="label" for="count">Nombre de joueurs</label>
-      <div class="stepper">
-        <button type="button" id="minus" aria-label="Retirer un joueur">−</button>
-        <input type="number" id="count" min="2" max="40" value="8" inputmode="numeric">
-        <button type="button" id="plus" aria-label="Ajouter un joueur">+</button>
-      </div>
-    </div>
 
     <p class="summary" id="summary" aria-live="polite"></p>
   </section>
