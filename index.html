@@ -9,7 +9,7 @@
 <body>
 <div class="wrap">
   <h1>Scrim random</h1>
-  <p class="lead">Répartis tes joueurs au hasard entre les bateaux de Sea of Thieves.</p>
+  <p class="lead">Répartis tes joueurs et leurs rôles au hasard entre les bateaux de Sea of Thieves.</p>
 
   <section aria-labelledby="h-config">
     <h2 id="h-config">Configuration</h2>
@@ -45,12 +45,16 @@
   </section>
 
   <section aria-labelledby="h-players">
-    <h2 id="h-players">Joueurs</h2>
+    <h2 id="h-players">Joueurs et rôles</h2>
+    <p class="hint">
+      Choisis un rôle principal et, si besoin, un sous-rôle de secours. Sans rôle, le joueur comble ce qui manque.
+      Les rôles dépendent du bateau (un helm de brig n’est pas un helm de galion) : chaque bateau garde ses propres choix.
+    </p>
     <div class="fields" id="fields"></div>
     <p class="error" id="error" role="alert"></p>
     <div class="actions">
       <button type="button" class="primary" id="shuffle">Mélanger les équipes</button>
-      <button type="button" id="clear">Vider les noms</button>
+      <button type="button" id="clear">Tout vider</button>
     </div>
   </section>
 
@@ -65,7 +69,6 @@
     <p class="status" id="status" aria-live="polite"></p>
   </section>
 </div>
-
 
 <script src="script.js"></script>
 </body>

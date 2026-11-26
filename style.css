@@ -8,11 +8,11 @@
   --color-bg:         #e9edec;  /* fond de la page */
   --color-surface:    #f7f9f8;  /* fond des blocs */
   --color-text:       #18262d;  /* texte principal */
-  --color-muted:      #5b6b72;  /* texte secondaire */
+  --color-muted:      #5b6b72;  /* texte secondaire (rôles, sous-rôle) */
   --color-border:     #c9d2d3;  /* bordures */
   --color-accent:     #1d4f5c;  /* couleur principale (boutons, sélection, équipes) */
   --color-accent-text:#ffffff;  /* texte posé sur la couleur principale */
-  --color-danger:     #9b2c2c;  /* messages d'erreur */
+  --color-danger:     #9b2c2c;  /* erreurs et joueurs hors de leurs rôles */
 
   /* --- Typographie --- */
   --font-body:    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -22,6 +22,7 @@
   --radius:       6px;   /* boutons, champs, cartes d'équipe */
   --radius-block: 8px;   /* gros blocs */
   --team-stripe:  4px;   /* épaisseur du liseré des équipes */
+  --max-width:    720px; /* largeur maximale de la page */
 
   color-scheme: light;
 }
@@ -57,7 +58,7 @@ body {
   padding: 2rem 1rem 3rem;
 }
 
-.wrap { max-width: 640px; margin: 0 auto; }
+.wrap { max-width: var(--max-width); margin: 0 auto; }
 
 h1 {
   font-family: var(--font-heading);
@@ -85,6 +86,8 @@ legend, .label {
   margin-bottom: .5rem;
   display: block;
 }
+
+.hint { color: var(--color-muted); font-size: .9rem; margin: -.3rem 0 1rem; }
 
 /* ==========================================================
    Choix du bateau
@@ -134,11 +137,11 @@ legend, .label {
    Champs et boutons
    ========================================================== */
 
-input[type="number"], input[type="text"], button {
+input[type="number"], input[type="text"], select, button {
   font: inherit;
   color: inherit;
 }
-input[type="number"], input[type="text"] {
+input[type="number"], input[type="text"], select {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -149,7 +152,7 @@ input[type="number"] { -moz-appearance: textfield; }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-input:focus-visible, button:focus-visible {
+input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
@@ -177,12 +180,14 @@ button.primary:hover { filter: brightness(1.08); }
 
 .summary { color: var(--color-muted); margin: 1rem 0 0; font-size: .95rem; }
 
-.fields {
+.fields { display: grid; gap: .5rem; margin-bottom: 1rem; }
+
+.player {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 9.5rem 9.5rem;
   gap: .5rem;
-  margin-bottom: 1rem;
 }
+
 .error {
   color: var(--color-danger);
   min-height: 1.4em;
@@ -208,9 +213,21 @@ button.primary:hover { filter: brightness(1.08); }
   border-radius: var(--radius);
   padding: .75rem .9rem;
 }
-.team h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.team h3 { margin: 0 0 .5rem; font-size: 1rem; }
 .team h3 small { color: var(--color-muted); font-weight: 400; margin-left: .35rem; }
-.team ul { margin: 0; padding-left: 1.1rem; }
+
+.team ul { list-style: none; margin: 0; padding: 0; }
+.team li {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  padding: .15rem 0;
+}
+.team .role { width: 3.2rem; flex: none; font-size: .85rem; color: var(--color-muted); }
+.team .who  { font-weight: 600; }
+.tag { margin-left: auto; font-size: .75rem; }
+.tag-sub { color: var(--color-muted); }
+.tag-off { color: var(--color-danger); }
 
 .team.reveal { animation: reveal .25s ease-out both; }
 @keyframes reveal {
@@ -218,7 +235,7 @@ button.primary:hover { filter: brightness(1.08); }
   to   { opacity: 1; transform: none; }
 }
 
-.note   { color: var(--color-muted); font-size: .9rem; margin: 0 0 1rem; }
+.note   { color: var(--color-muted); font-size: .9rem; margin: 0 0 1rem; white-space: pre-line; }
 .status { color: var(--color-muted); font-size: .9rem; margin: .75rem 0 0; min-height: 1.4em; }
 
 [hidden] { display: none !important; }
@@ -227,8 +244,9 @@ button.primary:hover { filter: brightness(1.08); }
    Mobile et accessibilité
    ========================================================== */
 
-@media (max-width: 480px) {
-  .fields { grid-template-columns: 1fr; }
+@media (max-width: 520px) {
+  .player { grid-template-columns: 1fr 1fr; }
+  .player .p-name { grid-column: 1 / -1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .team.reveal { animation: none; }
