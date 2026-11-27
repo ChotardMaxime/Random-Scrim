@@ -50,6 +50,7 @@ Each player in the result shows a small tag when they did not get their main rol
 | File | Role |
 |------|------|
 | `index.html` | Page structure |
+| `favicon.svg` | Favicon (ship's wheel, inline SVG file) |
 | `style.css` | Styling, with the color palette and fonts stored in CSS variables |
 | `script.js` | Ship and role configuration, shuffle and role assignment logic |
 
