@@ -48,8 +48,12 @@
     return buf[0] / 4294967296;
   }
   function randInt(max) {
+    /* Rejection sampling : évite le léger biais du modulo (2^32 % max != 0) */
+    var limit = Math.floor(4294967296 / max) * max;
     var buf = new Uint32Array(1);
-    window.crypto.getRandomValues(buf);
+    do {
+      window.crypto.getRandomValues(buf);
+    } while (buf[0] >= limit);
     return buf[0] % max;
   }
   function shuffled(arr) {
@@ -310,22 +314,21 @@
   function validate(list) {
     var seen = {};
     for (var i = 0; i < list.length; i++) {
-      if (!list[i]) return "Il manque le nom du joueur " + (i + 1) + ".";
+      if (!list[i]) return { msg: "Il manque le nom du joueur " + (i + 1) + ".", idx: i };
       var key = list[i].toLowerCase();
-      if (seen[key]) return "Le nom « " + list[i] + " » est utilisé deux fois.";
+      if (seen[key]) return { msg: "Le nom « " + list[i] + " » est utilisé deux fois.", idx: i };
       seen[key] = true;
     }
-    return "";
+    return { msg: "", idx: -1 };
   }
 
   function doShuffle() {
     var rows = readRows();
     var list = rows.map(function (r) { return r.name; });
-    var msg = validate(list);
-    errorEl.textContent = msg;
-    if (msg) {
-      var idx = list.findIndex(function (n) { return !n; });
-      if (idx >= 0) fieldsEl.querySelectorAll(".p-name")[idx].focus();
+    var problem = validate(list);
+    errorEl.textContent = problem.msg;
+    if (problem.msg) {
+      fieldsEl.querySelectorAll(".p-name")[problem.idx].focus();
       return;
     }
 
@@ -355,6 +358,21 @@
     resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /* Repli pour les contextes sans navigator.clipboard (fichier ouvert en local) */
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
   function copyResult() {
     if (!lastResult) return;
     var text = lastResult.teams.map(function (members, i) {
@@ -366,9 +384,9 @@
       statusEl.textContent = ok ? "Résultat copié." : "Impossible de copier, sélectionne le texte à la main.";
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacyCopy(text)); });
     } else {
-      done(false);
+      done(legacyCopy(text));
     }
   }
 
